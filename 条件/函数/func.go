@@ -7,22 +7,22 @@ import (
 	"runtime"
 )
 
-// func eval(a, b int, op string) (int, error) {
-// 	switch op {
-// 	case "+":
-// 		return a + b, nil
-// 	case "-":
-// 		return a - b, nil
-// 	case "*":
-// 		return a * b, nil
-// 	case "/":
-// 		// q,r= div(a,b)
-// 		q, _ := div1(a, b)
-// 		return q, nil
-// 	default:
-// 		return 0, fmt.Errorf("unsupported operation: %s", op)
-// 	}
-// }
+func eval(a, b int, op string) (int, error) {
+	switch op {
+	case "+":
+		return a + b, nil
+	case "-":
+		return a - b, nil
+	case "*":
+		return a * b, nil
+	case "/":
+		// q,r= div(a,b)
+		q, _ := div1(a, b)
+		return q, nil
+	default:
+		return 0, fmt.Errorf("unsupported operation: %s", op)
+	}
+}
 
 func div(a, b int) (int, int) {
 	return a / b, a % b
@@ -48,16 +48,32 @@ func pow(a, b int) int {
 	return int(math.Pow(float64(a), float64(b)))
 }
 
-// func apply1(op func(int, int) int, a, b int) int {
-// 	// p := reflect.ValueOf(op).Pointer()
-// 	// opName := runtime.FuncForPC(p).Name()
-// 	// fmt.Printf("Calling function %s with args(%d, %d)", opName, a, b)
-// 	return op(a, b)
-// }
-// func pow1(a, b int) int {
+func apply1(op func(int, int) int, a, b int) int {
+	p := reflect.ValueOf(op).Pointer()
+	opName := runtime.FuncForPC(p).Name()
+	fmt.Printf("Calling function %s with args(%d, %d)", opName, a, b)
+	return op(a, b)
+}
+func pow1(a, b int) int {
 
-// 	return int(math.Pow(float64(a), float64(b)))
-// }
+	return int(math.Pow(float64(a), float64(b)))
+}
+
+// 可旁边参数列表
+func sum(num ...int) int {
+	sum := 0
+	for i := range num {
+		fmt.Println(i, num[i])
+		sum += num[i]
+
+	}
+	return sum
+}
+
+func swap(a, b *int) {
+	*b, *a = *a, *b
+	// return a, b
+}
 
 func main() {
 	// if result, err := eval(3, 4, "x"); err != nil {
@@ -69,6 +85,16 @@ func main() {
 	// fmt.Println(div(13, 3))
 	// a, b := div1(13, 3)
 	// fmt.Println(a, b)
-	fmt.Println(apply(pow, 3, 4))
+
+	// fmt.Println(apply1(pow1, 3, 4))
+	// // 匿名函数
+	// fmt.Println(apply1(func(a int, b int) int {
+	// 	return int(math.Pow(float64(a), float64(b)))
+	// }, 3, 4))
+	fmt.Println(sum(1, 2, 3, 4, 5, 6))
+	a, b := 3, 4
+	swap(&a, &b)
+	fmt.Println(a, b)
+	// fmt.Println(swap(&a, &b))
 	// fmt.Println(apply(pow, 3, 4))
 }
